@@ -14,7 +14,8 @@ def create_categories():
         ExpenseCategory(name='Alimentation', icon='restaurant-outline', color='#00FF99'),
         ExpenseCategory(name='Logement', icon='home-outline', color='#0099FF'),
         ExpenseCategory(name='Loisirs', icon='game-controller-outline', color='#BB86FC'),
-        ExpenseCategory(name='Transport', icon='car-outline', color='#FF6B6B')
+        ExpenseCategory(name='Transport', icon='car-outline', color='#FF6B6B'),
+        ExpenseCategory(name='Autre', icon='ellipsis-horizontal-outline', color='#808080')
     ]
     ExpenseCategory.objects.bulk_create(categories)
     print('Categories created successfully!')
