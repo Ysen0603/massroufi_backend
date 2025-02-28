@@ -177,6 +177,60 @@ def expenses(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def user_detail(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def expense_distribution(request):
+    # Get all categories first
+    categories = ExpenseCategory.objects.all()
+    
+    # Get user's current balance
+    current_balance = request.user.current_balance
+
+    if current_balance == 0:
+        # If balance is 0, return all categories with 0%
+        distribution = [{
+            'category': category.name,
+            'percentage': 0,
+            'color': category.color,
+            'icon': category.icon,
+            'amount': 0
+        } for category in categories]
+        return Response(distribution)
+
+    # Get expenses by category
+    expenses_by_category = Transaction.objects.filter(
+        user=request.user,
+        type='expense'
+    ).select_related('category').values('category').annotate(
+        total_amount=Sum('amount')
+    )
+
+    # Create a dictionary of category IDs to their total amounts
+    category_amounts = {expense['category']: expense['total_amount'] 
+                       for expense in expenses_by_category if expense['category'] is not None}
+
+    # Calculate percentages based on current balance and format response for all categories
+    distribution = []
+    for category in categories:
+        amount = float(category_amounts.get(category.id, 0))
+        # Calculate percentage based on current balance instead of total expenses
+        percentage = (amount / float(current_balance) * 100) if current_balance > 0 else 0
+        distribution.append({
+            'category': category.name,
+            'percentage': round(percentage, 2),
+            'color': category.color,
+            'icon': category.icon,
+            'amount': amount
+        })
+
+    return Response(distribution)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def recent_transactions(request):
     try:
         user = request.user
