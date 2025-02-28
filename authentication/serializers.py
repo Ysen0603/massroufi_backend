@@ -27,9 +27,16 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class ExpenseCategorySerializer(serializers.ModelSerializer):
+    name_by_language = serializers.SerializerMethodField()
+
+    def get_name_by_language(self, obj):
+        request = self.context.get('request')
+        language = request.headers.get('Accept-Language', 'en')[:2].lower() if request else 'en'
+        return obj.get_name_by_language(language)
+
     class Meta:
         model = ExpenseCategory
-        fields = ('id', 'name', 'icon', 'color')
+        fields = ('id', 'name', 'name_fr', 'name_ar', 'name_by_language', 'icon', 'color')
 
 class TransactionSerializer(serializers.ModelSerializer):
     category_details = ExpenseCategorySerializer(source='category', read_only=True)

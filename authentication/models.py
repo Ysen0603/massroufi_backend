@@ -46,11 +46,20 @@ class CustomUser(AbstractUser):
 
 class ExpenseCategory(models.Model):
     name = models.CharField(_('name'), max_length=50)
+    name_fr = models.CharField(_('name (French)'), max_length=50)
+    name_ar = models.CharField(_('name (Arabic)'), max_length=50)
     icon = models.CharField(_('icon'), max_length=50)
     color = models.CharField(_('color'), max_length=7)  # Hex color code
 
     def __str__(self):
         return self.name
+
+    def get_name_by_language(self, language):
+        if language == 'fr':
+            return self.name_fr
+        elif language == 'ar':
+            return self.name_ar
+        return self.name  # Default to English
 
     class Meta:
         verbose_name = _('expense category')

@@ -95,7 +95,7 @@ def transactions_summary(request):
 def expense_categories(request):
     if request.method == 'GET':
         categories = ExpenseCategory.objects.all()
-        serializer = ExpenseCategorySerializer(categories, many=True)
+        serializer = ExpenseCategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ExpenseCategorySerializer(data=request.data)
