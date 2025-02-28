@@ -194,6 +194,10 @@ def expense_distribution(request):
         # If balance is 0, return all categories with 0%
         distribution = [{
             'category': category.name,
+            'name': category.name,
+            'name_fr': category.name_fr,
+            'name_ar': category.name_ar,
+            'name_by_language': category.get_name_by_language(request.headers.get('Accept-Language', 'en')[:2].lower()),
             'percentage': 0,
             'color': category.color,
             'icon': category.icon,
@@ -215,12 +219,17 @@ def expense_distribution(request):
 
     # Calculate percentages based on current balance and format response for all categories
     distribution = []
+    language = request.headers.get('Accept-Language', 'en')[:2].lower()
     for category in categories:
         amount = float(category_amounts.get(category.id, 0))
         # Calculate percentage based on current balance instead of total expenses
         percentage = (amount / float(current_balance) * 100) if current_balance > 0 else 0
         distribution.append({
             'category': category.name,
+            'name': category.name,
+            'name_fr': category.name_fr,
+            'name_ar': category.name_ar,
+            'name_by_language': category.get_name_by_language(language),
             'percentage': round(percentage, 2),
             'color': category.color,
             'icon': category.icon,
