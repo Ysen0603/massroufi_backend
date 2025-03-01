@@ -24,12 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ixnq)jquov4=%_ct4+h=4-610d9w&vqq-obt#-3@&ubtlzz1y@'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2', '192.168.1.4', '192.168.1.100']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -92,18 +93,6 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
 CORS_ALLOW_CREDENTIALS = True
 
-# Configure CORS allowed origins for development
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://10.0.2.2:8000',
-    'exp://localhost:19000',  # Expo development server
-    'exp://127.0.0.1:19000',
-    'exp://192.168.1.4:8081',  # Your Expo development server
-    'http://192.168.1.4:8081',
-    'exp://192.168.1.100:8081',  # Additional Expo development server
-    'http://192.168.1.100:8081'
-]
 
 # Additional CORS settings
 CORS_ALLOW_METHODS = [
