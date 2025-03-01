@@ -1,0 +1,15 @@
+{
+    "builds": [
+      {
+        "src": "massroufi_backend/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "massroufi_backend/wsgi.py"
+      }
+    ]
+  }
+  
