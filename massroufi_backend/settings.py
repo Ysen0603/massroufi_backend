@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -93,6 +93,19 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
 CORS_ALLOW_CREDENTIALS = True
 
+# Configure CORS allowed origins for development
+CORS_ALLOWED_ORIGINS = [
+    "exp://192.168.1.*",  # Local network IP range
+    "http://192.168.1.*",
+    "exp://172.20.*.*",   # Mobile hotspot range
+    "http://172.20.*.*",
+    "exp://10.0.2.2:8000",  # Android emulator
+    "http://10.0.2.2:8000",
+    "exp://localhost:19000",  # Expo development server
+    "http://localhost:19000",
+    "exp://127.0.0.1:19000",
+    "http://127.0.0.1:19000"
+]
 
 # Additional CORS settings
 CORS_ALLOW_METHODS = [

@@ -249,3 +249,15 @@ def recent_transactions(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_transaction(request, transaction_id):
+    try:
+        transaction = Transaction.objects.get(id=transaction_id, user=request.user)
+        transaction.delete()
+        return Response({'message': 'Transaction deleted successfully'}, status=status.HTTP_200_OK)
+    except Transaction.DoesNotExist:
+        return Response({'error': 'Transaction not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
