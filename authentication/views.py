@@ -261,3 +261,12 @@ def delete_transaction(request, transaction_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_all_transactions(request):
+    try:
+        Transaction.objects.filter(user=request.user).delete()
+        return Response({'message': 'All transactions deleted successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

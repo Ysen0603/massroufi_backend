@@ -3,6 +3,7 @@ from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
+    path('transactions/delete-all/', views.delete_all_transactions, name='delete-all-transactions'),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
     path('transactions-summary/', views.transactions_summary, name='transactions-summary'),
