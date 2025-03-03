@@ -285,8 +285,18 @@ def delete_transaction(request, transaction_id):
 @permission_classes([IsAuthenticated])
 def delete_all_transactions(request):
     try:
+        # Delete all transactions
         Transaction.objects.filter(user=request.user).delete()
-        return Response({'message': 'All transactions deleted successfully'}, status=status.HTTP_200_OK)
+        
+        # Update user's balance to initial state (0)
+        user = request.user
+        user.current_balance = 0
+        user.save()
+        
+        return Response({
+            'message': 'All transactions deleted successfully',
+            'current_balance': user.current_balance
+        }, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
