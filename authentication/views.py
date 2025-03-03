@@ -249,6 +249,26 @@ def recent_transactions(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_month_transactions(request):
+    try:
+        from django.utils import timezone
+        from datetime import datetime
+        
+        user = request.user
+        now = timezone.now()
+        transactions = Transaction.objects.filter(
+            user=user,
+            date__year=now.year,
+            date__month=now.month
+        ).order_by('-date')
+        
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_transaction(request, transaction_id):
