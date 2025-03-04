@@ -3,10 +3,6 @@
       {
         "src": "massroufi_backend/wsgi.py",
         "use": "@vercel/python"
-      },
-      {
-        "src": "staticfiles/**",
-        "use": "@vercel/staticfiles"
       }
     ],
     "routes": [
