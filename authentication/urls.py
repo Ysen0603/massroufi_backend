@@ -16,4 +16,5 @@ urlpatterns = [
     path('recent-transactions/', views.recent_transactions, name='recent-transactions'),
     path('expense-distribution/', views.expense_distribution, name='expense-distribution'),
     path('user/', views.user_detail, name='user-detail'),
+    path('contact/', views.contact_form, name='contact-form'),
 ]

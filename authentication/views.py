@@ -8,6 +8,10 @@ from django.db.models import Sum
 from decimal import Decimal
 from .serializers import UserSerializer, ExpenseCategorySerializer, TransactionSerializer
 from .models import Transaction, ExpenseCategory
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.conf import settings
 
 User = get_user_model()
 
@@ -140,6 +144,8 @@ def transaction_detail(request, pk):
     elif request.method == 'DELETE':
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    user = request.user
 
     # Calculate total income
     total_income = Transaction.objects.filter(
@@ -300,3 +306,25 @@ def delete_all_transactions(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def contact_form(request):
+    try:
+        subject = request.data.get('subject')
+        message = request.data.get('message')
+        sender_email = request.data.get('email')
+        
+        if not all([subject, message, sender_email]):
+            return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        send_mail(
+            subject,
+            f"From: {sender_email}\n\nMessage: {message}",
+            sender_email,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+        
+        return Response({'message': 'Email sent successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
