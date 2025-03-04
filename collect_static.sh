@@ -6,4 +6,4 @@ py -m pip install -r requirements.txt
 # Create static directory if it doesn't exist
 mkdir -p static
 # Collect static files
-py manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
