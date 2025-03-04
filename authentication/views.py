@@ -189,6 +189,16 @@ def user_detail(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def all_users(request):
+    if not request.user.is_superuser:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    users = User.objects.all().order_by('-date_joined')
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def expense_distribution(request):
     # Get all categories first
     categories = ExpenseCategory.objects.all()
